@@ -35,7 +35,7 @@ module.exports = {
         allowNull: false,
       },
       cep: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(8),
         allowNull: false,
       },
       created_at: {
