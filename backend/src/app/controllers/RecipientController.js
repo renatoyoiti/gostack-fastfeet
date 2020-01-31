@@ -61,6 +61,43 @@ class RecipientController {
       city,
     });
   }
+
+  async index(req, res) {
+    const { page } = req.query;
+    const recipients = await Recipient.findAll({
+      order: ['name'],
+      limit: 20,
+      offset: (page - 1) * 20,
+    });
+
+    if (!recipients) {
+      return res.status(500).json({
+        error: 'Internal server error',
+      });
+    }
+
+    return res.json(recipients);
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!recipient) {
+      return res.status(400).json({
+        error: 'Recipient not found',
+      });
+    }
+
+    await recipient.update(req.body);
+
+    return res.json(recipient);
+  }
 }
 
 export default new RecipientController();
