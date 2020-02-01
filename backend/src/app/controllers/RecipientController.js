@@ -131,6 +131,44 @@ class RecipientController {
 
     return res.json(recipient);
   }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const recipient = Recipient.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!recipient) {
+      return res.status(400).json({
+        error: 'Recipient not found',
+      });
+    }
+
+    return res.json(recipient);
+  }
+
+  async destroy(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!recipient) {
+      return res.status(400).json({
+        error: 'Recipient not found',
+      });
+    }
+
+    await recipient.destroy();
+
+    return res.json();
+  }
 }
 
 export default new RecipientController();

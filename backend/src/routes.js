@@ -21,6 +21,8 @@ routes.use(express.urlencoded({ extended: true }));
 routes.get('/recipients', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
+routes.get('/recipients/:id', RecipientController.show);
+routes.delete('/recipients/:id', RecipientController.destroy);
 
 routes.post('/ceps', CepController.store);
 
