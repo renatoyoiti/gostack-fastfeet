@@ -15,9 +15,6 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      avatar_id: {
-        type: Sequelize.INTEGER,
-      },
       created_at: {
         type: 'TIMESTAMP',
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
