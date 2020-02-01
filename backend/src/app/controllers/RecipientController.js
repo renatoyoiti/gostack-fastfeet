@@ -80,6 +80,39 @@ class RecipientController {
   }
 
   async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string()
+        .required()
+        .max(255),
+      cep: Yup.string()
+        .required()
+        .min(8)
+        .max(8),
+      neighborhood: Yup.string()
+        .required()
+        .max(255),
+      street: Yup.string()
+        .required()
+        .max(255),
+      number: Yup.string()
+        .required()
+        .max(255),
+      complement: Yup.string().max(255),
+      state: Yup.string()
+        .required()
+        .min(2)
+        .max(2),
+      city: Yup.string()
+        .required()
+        .max(255),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        error: 'Validation fails',
+      });
+    }
+
     const { id } = req.params;
 
     const recipient = await Recipient.findOne({
