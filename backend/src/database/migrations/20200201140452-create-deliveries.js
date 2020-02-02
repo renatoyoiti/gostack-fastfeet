@@ -9,11 +9,13 @@ module.exports = {
       },
       recipient_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
+        references: { model: 'recipients', key: 'id' },
       },
       deliveryman_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
+        references: { model: 'deliverymans', key: 'id' },
       },
       product: {
         type: Sequelize.STRING,
