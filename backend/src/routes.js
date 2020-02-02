@@ -9,6 +9,7 @@ import SessionController from './app/controllers/SessionController';
 import CepController from './app/controllers/CepController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import AvatarController from './app/controllers/AvatarController';
+import DeliveryController from './app/controllers/DeliveryController';
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -36,5 +37,9 @@ routes.post(
   upload.single('file'),
   AvatarController.store
 );
+
+routes.post('/deliveries/deliverymans/:id', DeliveryController.store);
+routes.get('/deliveries', DeliveryController.index);
+routes.delete('/deliveries/:id', DeliveryController.destroy);
 
 export default routes;
