@@ -5,13 +5,16 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",
+    "queue": "nodemon src/queue.js",
     "dev:debug": "nodemon --inspect src/server.js",
     "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "posttest": "cross-env NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "dependencies": {
+    "@sentry/node": "5.11.2",
     "bcryptjs": "^2.4.3",
+    "bee-queue": "^1.2.3",
     "cep-promise": "^3.0.9",
     "cross-env": "^7.0.0",
     "crypto-random-string": "^3.1.0",
