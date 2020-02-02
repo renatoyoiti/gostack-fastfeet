@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import Delivery from '../models/Delivery';
+import Mail from '../../lib/Mail';
 
 class DeliveryController {
   async store(req, res) {
@@ -55,6 +56,25 @@ class DeliveryController {
         error: 'Internal server error',
       });
     }
+
+    // Quando a encomenda é cadastrada para um entregador, o entregador recebe um e-mail com detalhes da encomenda, com nome do produto e uma mensagem informando-o que o produto já está disponível para a retirada.
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Você tem uma nova entrega!',
+      template: 'delivery',
+      context: {
+        deliveryman: deliveryman.name,
+        recipient: recipient.name,
+        state: recipient.state,
+        city: recipient.city,
+        cep: recipient.cep,
+        neighborhood: recipient.neighborhood,
+        street: recipient.street,
+        number: recipient.number,
+        complement: recipient.complement,
+      },
+    });
 
     return res.json(delivery);
   }
