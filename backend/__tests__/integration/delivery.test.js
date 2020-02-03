@@ -21,9 +21,10 @@ describe('Create', () => {
     const { id } = deliveryman.dataValues;
 
     const res = await request(app)
-      .post(`/deliveries/deliverymans/${id}`)
+      .post('/deliveries')
       .set('Authorization', `bearer ${token}`)
       .send({
+        deliveryman_id: id,
         recipient_id,
         product: 'Monitor QLED',
       });
@@ -47,11 +48,13 @@ describe('List', () => {
     const { id: recipient_id } = recipient.dataValues;
 
     const { id } = deliveryman.dataValues;
+    console.log(id);
 
     await request(app)
-      .post(`/deliveries/deliverymans/${id}`)
+      .post('/deliveries')
       .set('Authorization', `bearer ${token}`)
       .send({
+        deliveryman_id: id,
         recipient_id,
         product: 'Monitor QLED',
       });
@@ -65,6 +68,34 @@ describe('List', () => {
     expect(res.body).toEqual(
       expect.arrayContaining([expect.objectContaining({})])
     );
+  });
+});
+
+describe('Update', () => {
+  beforeEach(async () => {
+    await truncate();
+  });
+
+  it('should update a delivery', async () => {
+    const token = await getToken();
+
+    const deliveryman = await factory.create('Deliveryman');
+    const recipient = await factory.create('Recipient');
+    const delivery = await factory.create('Delivery', {
+      recipient_id: recipient.dataValues.id,
+      deliveryman_id: deliveryman.dataValues.id,
+    });
+
+    const { id } = delivery.dataValues;
+
+    const res = await request(app)
+      .put(`/deliveries/${id}`)
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        product: 'Esse não vai dar',
+      });
+
+    expect(res.status).toBe(200);
   });
 });
 

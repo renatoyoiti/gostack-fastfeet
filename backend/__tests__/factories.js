@@ -30,7 +30,7 @@ factory.define('Deliveryman', Deliveryman, {
 
 factory.define('Delivery', Delivery, {
   recipient_id: faker.random.number(),
-  deliveryman_id: faker.random.number(),
+  deliveryman_id: faker.random.alphaNumeric(6),
   product: faker.commerce.product(),
 });
 

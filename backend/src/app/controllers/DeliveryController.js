@@ -2,12 +2,13 @@ import * as Yup from 'yup';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import Delivery from '../models/Delivery';
-import Queue from '../../lib/Queue';
+// import Queue from '../../lib/Queue';
 import NewDeliveryMail from '../jobs/NewDeliveryMail';
 
 class DeliveryController {
   async store(req, res) {
     const schema = Yup.object().shape({
+      deliveryman_id: Yup.string().required(),
       recipient_id: Yup.string().required(),
       product: Yup.string().required(),
     });
@@ -18,7 +19,7 @@ class DeliveryController {
       });
     }
 
-    const { id: deliveryman_id } = req.params;
+    const { deliveryman_id, recipient_id, product } = req.body;
 
     const deliveryman = await Deliveryman.findOne({
       where: {
@@ -31,8 +32,6 @@ class DeliveryController {
         error: 'Deliveryman not found',
       });
     }
-
-    const { recipient_id, product } = req.body;
 
     const recipient = await Recipient.findOne({
       where: {
@@ -58,10 +57,10 @@ class DeliveryController {
       });
     }
 
-    await Queue.add(NewDeliveryMail.key, {
-      deliveryman,
-      recipient,
-    });
+    // await Queue.add(NewDeliveryMail.key, {
+    //   deliveryman,
+    //   recipient,
+    // });
 
     return res.json(delivery);
   }
@@ -122,7 +121,67 @@ class DeliveryController {
       });
     }
 
+    await delivery.destroy();
+
     return res.json();
+  }
+
+  async update(req, res) {
+    if (req.body.recipient_id || req.body.deliveryman_id) {
+      return res.status(401).json({
+        error: "It's not permitted to change de recipient or the deliveryman",
+      });
+    }
+
+    const schema = Yup.object().shape({
+      product: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        error: 'Validation fails',
+      });
+    }
+
+    const { id } = req.params;
+
+    const delivery = await Delivery.findOne({
+      where: {
+        id,
+      },
+      attributes: ['id', 'recipient_id', 'deliveryman_id', 'product'],
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'cep',
+            'neighborhood',
+            'street',
+            'complement',
+            'number',
+            'state',
+            'city',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
+
+    if (!delivery) {
+      return res.status(400).json({
+        error: 'Delivery not found',
+      });
+    }
+
+    await delivery.update(req.body);
+
+    return res.json(delivery);
   }
 }
 

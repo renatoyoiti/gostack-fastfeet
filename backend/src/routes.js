@@ -38,8 +38,9 @@ routes.post(
   AvatarController.store
 );
 
-routes.post('/deliveries/deliverymans/:id', DeliveryController.store);
+routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);
+routes.put('/deliveries/:id', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.destroy);
 
 export default routes;
