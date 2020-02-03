@@ -10,11 +10,14 @@ import CepController from './app/controllers/CepController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import AvatarController from './app/controllers/AvatarController';
 import DeliveryController from './app/controllers/DeliveryController';
+import DeliverymanSessionController from './app/controllers/DeliverymanSessionController';
+import OrderController from './app/controllers/OrderController';
 
 const routes = Router();
 const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
+routes.post('/sessions/deliverymans', DeliverymanSessionController.store);
 
 routes.use(authMiddleware);
 routes.use(express.urlencoded({ extended: true }));
@@ -27,6 +30,7 @@ routes.delete('/recipients/:id', RecipientController.destroy);
 
 routes.post('/ceps', CepController.store);
 
+routes.get('/deliverymans/:id/deliveries', OrderController.index);
 routes.post('/deliverymans', DeliverymanController.store);
 routes.get('/deliverymans', DeliverymanController.index);
 routes.put('/deliverymans/:id', DeliverymanController.update);
