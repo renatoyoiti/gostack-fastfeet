@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import { format, parseISO } from 'date-fns';
 
 class Delivery extends Model {
   static init(sequelize) {
@@ -15,6 +16,15 @@ class Delivery extends Model {
         },
         end_date: {
           type: 'TIMESTAMP',
+        },
+        createdAt: {
+          type: 'TIMESTAMP',
+        },
+        date: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return format(this.createdAt, 'dd/MM/yy');
+          },
         },
       },
       {

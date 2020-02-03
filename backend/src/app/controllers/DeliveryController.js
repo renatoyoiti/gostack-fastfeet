@@ -3,13 +3,14 @@ import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import Delivery from '../models/Delivery';
 // import Queue from '../../lib/Queue';
-import NewDeliveryMail from '../jobs/NewDeliveryMail';
+// import NewDeliveryMail from '../jobs/NewDeliveryMail';
+// import CancellationDeliveryMail from '../jobs/CancellationDeliveryMail';
 
 class DeliveryController {
   async store(req, res) {
     const schema = Yup.object().shape({
       deliveryman_id: Yup.string().required(),
-      recipient_id: Yup.string().required(),
+      recipient_id: Yup.number().required(),
       product: Yup.string().required(),
     });
 
@@ -113,7 +114,29 @@ class DeliveryController {
   async destroy(req, res) {
     const { id } = req.params;
 
-    const delivery = await Delivery.findByPk(id);
+    const delivery = await Delivery.findByPk(id, {
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'cep',
+            'neighborhood',
+            'street',
+            'complement',
+            'number',
+            'state',
+            'city',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
 
     if (!delivery) {
       return res.status(400).json({
@@ -121,9 +144,33 @@ class DeliveryController {
       });
     }
 
-    await delivery.destroy();
+    if (delivery.canceled_at) {
+      return res.status(401).json({
+        error: 'This delivery is already canceled',
+      });
+    }
 
-    return res.json();
+    if (delivery.start_date) {
+      return res.status(401).json({
+        error: 'This delivery is already on course to final destiny',
+      });
+    }
+
+    if (delivery.end_date) {
+      return res.status(401).json({
+        error: "You can't cancel a delivery that is already finished",
+      });
+    }
+
+    delivery.canceled_at = new Date();
+
+    await delivery.save();
+
+    // await Queue.add(CancellationDeliveryMail.key, {
+    //   delivery,
+    // });
+
+    return res.json(delivery);
   }
 
   async update(req, res) {
