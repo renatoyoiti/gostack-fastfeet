@@ -1,5 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 import cryptoRandomString from 'crypto-random-string';
+import { format } from 'date-fns';
 
 class Deliveryman extends Model {
   static init(sequelize) {
@@ -11,9 +12,19 @@ class Deliveryman extends Model {
         },
         name: Sequelize.STRING,
         email: Sequelize.STRING,
+        createdAt: {
+          type: 'TIMESTAMP',
+        },
+        createDt: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return format(this.createdAt, "yyyy-MM-dd'T'HH:mm:ssxxx");
+          },
+        },
       },
       {
         sequelize,
+        tableName: 'deliverymen',
       }
     );
 

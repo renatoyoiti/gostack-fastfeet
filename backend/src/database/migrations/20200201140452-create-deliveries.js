@@ -15,35 +15,33 @@ module.exports = {
       deliveryman_id: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: { model: 'deliverymans', key: 'id' },
+        references: { model: 'deliveryman', key: 'id' },
       },
       product: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       canceled_at: {
-        type: 'TIMESTAMP',
+        type: Sequelize.DATE,
         allowNull: true,
         defaultValue: null,
       },
       start_date: {
-        type: 'TIMESTAMP',
+        type: Sequelize.DATE,
         allowNull: true,
         defaultValue: null,
       },
       end_date: {
-        type: 'TIMESTAMP',
+        type: Sequelize.DATE,
         allowNull: true,
         defaultValue: null,
       },
       created_at: {
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
       },
       updated_at: {
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
       },
     });

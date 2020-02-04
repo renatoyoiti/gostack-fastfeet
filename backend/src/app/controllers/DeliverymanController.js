@@ -53,19 +53,19 @@ class DeliverymanController {
       });
     }
 
-    const deliverymans = await Deliveryman.findAll({
+    const deliverymen = await Deliveryman.findAll({
       order: ['name'],
       limit: 20,
       offset: (page - 1) * 20,
     });
 
-    if (!deliverymans) {
+    if (!deliverymen) {
       return res.status(500).json({
         error: 'Internal server error',
       });
     }
 
-    return res.json(deliverymans);
+    return res.json(deliverymen);
   }
 
   async update(req, res) {

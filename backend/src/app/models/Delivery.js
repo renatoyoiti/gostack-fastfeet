@@ -1,5 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 class Delivery extends Model {
   static init(sequelize) {
@@ -9,21 +9,47 @@ class Delivery extends Model {
         deliveryman_id: Sequelize.STRING,
         product: Sequelize.STRING,
         canceled_at: {
-          type: 'TIMESTAMP',
+          type: Sequelize.DATE,
         },
         start_date: {
-          type: 'TIMESTAMP',
+          type: Sequelize.DATE,
         },
         end_date: {
-          type: 'TIMESTAMP',
+          type: Sequelize.DATE,
         },
-        createdAt: {
-          type: 'TIMESTAMP',
+        created_at: {
+          type: Sequelize.DATE,
         },
-        date: {
+        createDt: {
           type: Sequelize.VIRTUAL,
           get() {
-            return format(this.createdAt, 'dd/MM/yy');
+            return format(this.created_at, "yyyy-MM-dd'T'HH:mm:ssxxx");
+          },
+        },
+        startDt: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return (
+              this.start_date &&
+              format(this.start_date, "yyyy-MM-dd'T'HH:mm:ssxxx")
+            );
+          },
+        },
+        endDt: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return (
+              this.end_date && format(this.end_date, "yyyy-MM-dd'T'HH:mm:ssxxx")
+            );
+          },
+        },
+        cancelDt: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return (
+              this.canceled_at &&
+              format(this.canceled_at, "yyyy-MM-dd'T'HH:mm:ssxxx")
+            );
           },
         },
       },
