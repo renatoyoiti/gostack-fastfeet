@@ -8,6 +8,7 @@ class Delivery extends Model {
         recipient_id: Sequelize.INTEGER,
         deliveryman_id: Sequelize.STRING,
         signature_id: Sequelize.INTEGER,
+        problem_id: Sequelize.INTEGER,
         product: Sequelize.STRING,
         canceled_at: {
           type: Sequelize.DATE,

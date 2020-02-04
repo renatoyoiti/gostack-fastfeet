@@ -7,10 +7,12 @@ import Deliveryman from '../app/models/Deliveryman';
 import Avatar from '../app/models/Avatar';
 import Delivery from '../app/models/Delivery';
 import Signature from '../app/models/Signature';
+import DeliveryProblem from '../app/models/DeliveryProblem';
 
 export const models = [
   Signature,
   Delivery,
+  DeliveryProblem,
   Recipient,
   User,
   Deliveryman,
