@@ -158,9 +158,6 @@ class OrderController {
       where: {
         id: deliveryId,
         deliveryman_id: deliverymanId,
-        canceled_at: null,
-        start_date: null,
-        end_date: null,
       },
       attributes: ['id', 'deliveryman_id', 'start_date', 'startDt'],
       include: [
@@ -187,9 +184,21 @@ class OrderController {
       });
     }
 
+    if (delivery.canceled_at) {
+      return res.status(401).json({
+        error: "Unauthorized. You can't withdrawn a canceled delivery",
+      });
+    }
+
+    if (delivery.end_date) {
+      return res.status(401).json({
+        error: "Unauthorized. You can't withdrawn a finished delivery.",
+      });
+    }
+
     if (delivery.start_date) {
       return res.status(401).json({
-        error: 'Unauthorized. You already withdrawn this order.',
+        error: 'Unauthorized. You already withdrew this delivery.',
       });
     }
 
@@ -208,15 +217,12 @@ class OrderController {
       "yyyy-MM-dd'T'HH:mm:ssxxx"
     );
 
-    if (isAfter(startDate, parseISO(workEnd))) {
+    if (
+      isAfter(startDate, parseISO(workEnd)) ||
+      isBefore(startDate, parseISO(workStart))
+    ) {
       return res.status(401).json({
-        error: 'You can only withdraw an order between 08:00 to 18:00 hours',
-      });
-    }
-
-    if (isBefore(startDate, parseISO(workStart))) {
-      return res.status(401).json({
-        error: 'You can only withdraw an order between 08:00 to 18:00 hours',
+        error: "You can only withdraw a delivery between 8 and 18 o'clock",
       });
     }
 
@@ -234,7 +240,8 @@ class OrderController {
 
     if (no_withdrawn === '5') {
       return res.status(401).json({
-        error: 'Orders withdraw limit reached',
+        error:
+          'Delivery withdraw limit reached. You can only withdraw 5 deliveries per day',
       });
     }
 
@@ -255,8 +262,9 @@ class OrderController {
       });
     }
 
-    const delivery = await Delivery.findByPk(deliveryId, {
+    const delivery = await Delivery.findOne({
       where: {
+        id: deliveryId,
         deliveryman_id: deliverymanId,
         end_date: null,
       },
@@ -289,19 +297,19 @@ class OrderController {
 
     if (!delivery.start_date) {
       return res.status(401).json({
-        error: "Unauthorized. You can't finish unstarted orders",
+        error: "Unauthorized. You can't finish unstarted deliveries",
       });
     }
 
     if (delivery.canceled_at) {
       return res.status(401).json({
-        error: "Unauthorized. You can't finish canceled orders",
+        error: "Unauthorized. You can't finish canceled deliveries",
       });
     }
 
     if (delivery.end_date) {
       return res.status(401).json({
-        error: 'Unauthorized. The order is already finished.',
+        error: 'Unauthorized. The delivery is already finished.',
       });
     }
 
