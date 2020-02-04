@@ -4,9 +4,7 @@ import app from '../../src/app';
 import factory from '../factories';
 
 export const getDeliveryToken = async () => {
-  const { id } = await factory.create('Deliveryman', {
-    name: 'Joaquino',
-  });
+  const { id } = await factory.create('Deliveryman');
 
   const res = await request(app)
     .post('/sessions/deliverymans')

@@ -5,6 +5,10 @@ import truncate from '../utils/truncate';
 import getToken from '../utils/returnToken';
 import factory from '../factories';
 
+beforeEach(async () => {
+  await truncate();
+});
+
 describe('Create', () => {
   beforeEach(async () => {
     await truncate();
@@ -13,24 +17,22 @@ describe('Create', () => {
   it('should create a new delivery', async () => {
     const token = await getToken();
 
-    const deliveryman = await factory.create('Deliveryman');
-    const recipient = await factory.create('Recipient');
-
-    const { id: recipient_id } = recipient.dataValues;
-
-    const { id } = deliveryman.dataValues;
+    const { id: deliveryman_id } = await factory.create('Deliveryman');
+    const { id: recipient_id } = await factory.create('Recipient');
 
     const res = await request(app)
       .post('/deliveries')
       .set('Authorization', `bearer ${token}`)
       .send({
-        deliveryman_id: id,
+        deliveryman_id,
         recipient_id,
         product: 'Monitor QLED',
       });
 
+    console.log(res);
+
     expect(res.status).toBe(200);
-    expect(res.body).toContainKeys(['id', 'recipient_id', 'deliveryman_id']);
+    // expect(res.body).toContainKeys(['id', 'recipient_id', 'deliveryman_id']);
   });
 });
 
@@ -48,7 +50,6 @@ describe('List', () => {
     const { id: recipient_id } = recipient.dataValues;
 
     const { id } = deliveryman.dataValues;
-    console.log(id);
 
     await request(app)
       .post('/deliveries')

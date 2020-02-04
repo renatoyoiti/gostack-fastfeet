@@ -4,7 +4,6 @@ export default async () => {
   Promise.all(
     models.map(model => {
       model.destroy({ truncate: true, force: true });
-      return true;
     })
   );
 };
