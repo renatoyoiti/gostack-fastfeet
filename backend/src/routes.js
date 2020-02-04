@@ -12,6 +12,7 @@ import AvatarController from './app/controllers/AvatarController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliverymanSessionController from './app/controllers/DeliverymanSessionController';
 import OrderController from './app/controllers/OrderController';
+import SignatureController from './app/controllers/SignatureController';
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -52,6 +53,12 @@ routes.post(
   '/deliverymen/:id/avatars',
   upload.single('file'),
   AvatarController.store
+);
+
+routes.post(
+  '/deliverymen/:deliverymanId/deliveries/:deliveryId/signature',
+  upload.single('file'),
+  SignatureController.store
 );
 
 routes.post('/deliveries', DeliveryController.store);

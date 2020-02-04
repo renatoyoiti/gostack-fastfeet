@@ -7,6 +7,7 @@ class Delivery extends Model {
       {
         recipient_id: Sequelize.INTEGER,
         deliveryman_id: Sequelize.STRING,
+        signature_id: Sequelize.INTEGER,
         product: Sequelize.STRING,
         canceled_at: {
           type: Sequelize.DATE,
@@ -70,6 +71,11 @@ class Delivery extends Model {
     this.belongsTo(models.Recipient, {
       foreignKey: 'recipient_id',
       as: 'recipient',
+    });
+
+    this.belongsTo(models.Signature, {
+      foreignKey: 'signature_id',
+      as: 'signature',
     });
   }
 }
