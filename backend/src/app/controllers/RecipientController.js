@@ -68,6 +68,17 @@ class RecipientController {
       order: ['name'],
       limit: 20,
       offset: (page - 1) * 20,
+      attributes: [
+        'id',
+        'name',
+        'cep',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+      ],
     });
 
     if (!recipients) {
@@ -115,10 +126,18 @@ class RecipientController {
 
     const { id } = req.params;
 
-    const recipient = await Recipient.findOne({
-      where: {
-        id,
-      },
+    const recipient = await Recipient.findByPk(id, {
+      attributes: [
+        'id',
+        'name',
+        'cep',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+      ],
     });
 
     if (!recipient) {
@@ -139,6 +158,17 @@ class RecipientController {
       where: {
         id,
       },
+      attributes: [
+        'id',
+        'name',
+        'cep',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+      ],
     });
 
     if (!recipient) {

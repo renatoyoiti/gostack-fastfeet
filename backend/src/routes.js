@@ -17,7 +17,7 @@ const routes = Router();
 const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
-routes.post('/sessions/deliverymans', DeliverymanSessionController.store);
+routes.post('/sessions/deliverymen', DeliverymanSessionController.store);
 
 routes.use(authMiddleware);
 routes.use(express.urlencoded({ extended: true }));
@@ -30,14 +30,26 @@ routes.delete('/recipients/:id', RecipientController.destroy);
 
 routes.post('/ceps', CepController.store);
 
-routes.get('/deliverymans/:id/deliveries', OrderController.index);
-routes.post('/deliverymans', DeliverymanController.store);
-routes.get('/deliverymans', DeliverymanController.index);
-routes.put('/deliverymans/:id', DeliverymanController.update);
-routes.delete('/deliverymans/:id', DeliverymanController.destroy);
+routes.get('/deliverymen/:id/deliveries', OrderController.index);
+routes.get(
+  '/deliverymen/:deliverymanId/deliveries/:deliveryId',
+  OrderController.show
+);
+routes.post(
+  '/deliverymen/:deliverymanId/deliveries/:deliveryId',
+  OrderController.store
+);
+routes.delete(
+  '/deliverymen/:deliverymanId/deliveries/:deliveryId',
+  OrderController.delete
+);
+routes.post('/deliverymen', DeliverymanController.store);
+routes.get('/deliverymen', DeliverymanController.index);
+routes.put('/deliverymen/:id', DeliverymanController.update);
+routes.delete('/deliverymen/:id', DeliverymanController.destroy);
 
 routes.post(
-  '/deliverymans/:id/avatars',
+  '/deliverymen/:id/avatars',
   upload.single('file'),
   AvatarController.store
 );

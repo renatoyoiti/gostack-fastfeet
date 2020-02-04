@@ -2,9 +2,9 @@ import * as Yup from 'yup';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import Delivery from '../models/Delivery';
-// import Queue from '../../lib/Queue';
-// import NewDeliveryMail from '../jobs/NewDeliveryMail';
-// import CancellationDeliveryMail from '../jobs/CancellationDeliveryMail';
+import Queue from '../../lib/Queue';
+import NewDeliveryMail from '../jobs/NewDeliveryMail';
+import CancellationDeliveryMail from '../jobs/CancellationDeliveryMail';
 
 class DeliveryController {
   async store(req, res) {
@@ -58,10 +58,10 @@ class DeliveryController {
       });
     }
 
-    // await Queue.add(NewDeliveryMail.key, {
-    //   deliveryman,
-    //   recipient,
-    // });
+    await Queue.add(NewDeliveryMail.key, {
+      deliveryman,
+      recipient,
+    });
 
     return res.json(delivery);
   }
@@ -166,9 +166,9 @@ class DeliveryController {
 
     await delivery.save();
 
-    // await Queue.add(CancellationDeliveryMail.key, {
-    //   delivery,
-    // });
+    await Queue.add(CancellationDeliveryMail.key, {
+      delivery,
+    });
 
     return res.json(delivery);
   }
