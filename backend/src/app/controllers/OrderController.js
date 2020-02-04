@@ -82,8 +82,9 @@ class OrderController {
       });
     }
 
-    const delivery = await Delivery.findByPk(deliveryId, {
+    const delivery = await Delivery.findOne({
       where: {
+        id: deliveryId,
         deliveryman_id: deliverymanId,
       },
       attributes: [
@@ -153,8 +154,9 @@ class OrderController {
       });
     }
 
-    const delivery = await Delivery.findByPk(deliveryId, {
+    const delivery = await Delivery.findOne({
       where: {
+        id: deliveryId,
         deliveryman_id: deliverymanId,
         canceled_at: null,
         start_date: null,
@@ -182,6 +184,12 @@ class OrderController {
     if (!delivery) {
       return res.status(400).json({
         error: 'Delivery not found',
+      });
+    }
+
+    if (delivery.start_date) {
+      return res.status(401).json({
+        error: 'Unauthorized. You already withdrawn this order.',
       });
     }
 
@@ -288,6 +296,12 @@ class OrderController {
     if (delivery.canceled_at) {
       return res.status(401).json({
         error: "Unauthorized. You can't finish canceled orders",
+      });
+    }
+
+    if (delivery.end_date) {
+      return res.status(401).json({
+        error: 'Unauthorized. The order is already finished.',
       });
     }
 
