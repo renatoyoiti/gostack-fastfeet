@@ -26,13 +26,11 @@ module.exports = {
         defaultValue: false,
       },
       created_at: {
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
       },
       updated_at: {
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
         allowNull: false,
       },
     });
