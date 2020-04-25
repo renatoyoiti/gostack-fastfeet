@@ -15,7 +15,7 @@ module.exports = {
       deliveryman_id: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: { model: 'deliveryman', key: 'id' },
+        references: { model: 'deliverymen', key: 'id' },
       },
       product: {
         type: Sequelize.STRING,

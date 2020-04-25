@@ -1,6 +1,8 @@
 import { Op } from 'sequelize';
 import * as Yup from 'yup';
 
+import CancellationDeliveryProblemMail from '../jobs/CancellationDeliveryProblemMail';
+
 import Delivery from '../models/Delivery';
 import DeliveryProblem from '../models/DeliveryProblem';
 import Queue from '../../lib/Queue';
@@ -65,7 +67,7 @@ class CancelDeliveryProblemController {
 
     await delivery.save();
 
-    await Queue.sendMail({
+    await Queue.add(CancellationDeliveryProblemMail.key, {
       problem,
       delivery,
     });

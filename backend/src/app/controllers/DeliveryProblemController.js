@@ -50,7 +50,7 @@ class DeliveryProblemController {
         id,
         deliveryman_id: req.userId,
       },
-      attributes: ['id'],
+      attributes: ['id', 'start_date', 'canceled_at'],
       include: [
         {
           model: Deliveryman,
